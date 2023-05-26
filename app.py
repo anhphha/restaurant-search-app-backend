@@ -31,7 +31,6 @@ def helloworld():
 @APP.route("/restaurants", methods=["GET"])
 def check_current_location():
     query = request.args.get("q", "")
-
     default_lat = 60.170456
     default_lon = 24.9383042
     current_lat = 0
