@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import math
+import re
 
 APP = Flask(__name__)
 
@@ -22,26 +23,61 @@ restaurants = [
 
 @APP.route('/', methods=['GET'])
 def helloworld():
-    if(request.method == 'GET'):
+    if (request.method == 'GET'):
         data = {"data": "Hello World"}
         return jsonify(data)
 
-@APP.route("/restaurants", methods=["GET"])
-def search_restaurants():
-    query = request.args.get("q", "")
-    lat = float(request.args.get("lat", 0))
-    lon = float(request.args.get("lon", 0))
 
+@APP.route("/restaurants", methods=["GET"])
+def check_current_location():
+    query = request.args.get("q", "")
+
+    default_lat = 60.170456
+    default_lon = 24.9383042
+    current_lat = 0
+    current_lon = 0
     results = []
+
+    lat_param = request.args.get("lat")
+    lon_param = request.args.get("long")
+
+    # Better solution
+    if lat_param is not None and lon_param is not None:
+        try:
+            current_lat = float(lat_param)
+            current_lon = float(lon_param)
+        except ValueError:
+            return jsonify({"error": "Invalid lattitude or longitude values"})
+    else:
+        current_lat = float(request.args.get("lat", default_lat))
+        current_lon = float(request.args.get("lon", default_lon))
+
+    # Simple Solution:
+    # if lat_param is not None and lon_param is not None:
+    #     # if lattitude and longitude parameters are present, update the current values
+    #     current_lat = float(lat_param)
+    #     current_lon = float(long_param)
+    # elif lat_param is None and lon_param is None:
+    #     current_lat = float(request.args.get("lat", default_lat))
+    #     current_lon = float(request.args.get("lon", default_lon))
+    # else:
+    #     print("Error: Invalid latitude or longitude values.")
 
     for restaurant in restaurants:
         distance = calculate_distance(
-            lat, lon, restaurant["location"][1], restaurant["location"][0])
+            current_lat, current_lon, restaurant["location"][1], restaurant["location"][0])
 
         if distance <= 3 and query.lower() in restaurant["name"].lower():
             results.append(restaurant)
 
-    return jsonify(results)
+    return jsonify({
+        "name": results[0]["name"],
+        "city": results[0]["city"],
+        "currency": results[0]["currency"],
+        "delivery_price": results[0]["delivery_price"],
+        "description": results[0]["description"]
+    })
+
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
@@ -54,7 +90,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
         math.cos(math.radians(lat2)) * math.sin(dlon/2)*math.sin(dlon/2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 
-    distance=radius * c
+    distance = radius * c
     return distance
 
 
