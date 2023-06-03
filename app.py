@@ -29,6 +29,28 @@ def helloworld():
 
 
 @APP.route("/restaurants", methods=["GET"])
+def get_restaurant():
+    return jsonify(restaurants)
+
+
+@APP.route("/restaurants/search", methods=["GET"])
+def get_restaurant_info():
+    query = request.args.get("name", "")
+    if query:
+        for restaurant in restaurants:
+            if query.lower() in restaurant["name"].lower():
+                return jsonify({
+                    "name": restaurants[0]["name"],
+                    "city": restaurants[0]["city"],
+                    "currency": restaurants[0]["currency"],
+                    "delivery_price": restaurants[0]["delivery_price"],
+                    "description": restaurants[0]["description"]
+                })
+        return jsonify({"message":"restaurant not found"})
+    else:
+        return jsonify({"message": "Please provide a restaurant in the query"})
+
+
 def check_current_location():
     query = request.args.get("q", "")
     default_lat = 60.170456
@@ -40,16 +62,26 @@ def check_current_location():
     lat_param = request.args.get("lat")
     lon_param = request.args.get("long")
 
+    # Task 1:  check if there is name query.
+    # if yes, then return restaurant.
+    # no need to check current location or calculate distance
+
+    #Task 2: search name, description and tags for recommendation
+
+    # Checking current location
     # Better solution
     if lat_param is not None and lon_param is not None:
         try:
-            current_lat = float(lat_param)
-            current_lon = float(lon_param)
+            current_lat = lat_param
+            current_lon = lon_param
         except ValueError:
             return jsonify({"error": "Invalid lattitude or longitude values"})
     else:
-        current_lat = float(request.args.get("lat", default_lat))
-        current_lon = float(request.args.get("lon", default_lon))
+        current_lat = default_lat
+        current_lon = default_lon
+
+        # current_lat = float(request.args.get("lat", default_lat))
+        # current_lon = float(request.args.get("lon", default_lon))
 
     # Simple Solution:
     # if lat_param is not None and lon_param is not None:
@@ -76,7 +108,6 @@ def check_current_location():
         "delivery_price": results[0]["delivery_price"],
         "description": results[0]["description"]
     })
-
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
