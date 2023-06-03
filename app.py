@@ -48,7 +48,7 @@ def get_restaurant_info():
                 })
         return jsonify({"message":"restaurant not found"})
     else:
-        return jsonify({"message": "Please provide a restaurant in the query"})
+        return jsonify({"message": "Please provide a restaurant name in the query"})
 
 
 def check_current_location():
