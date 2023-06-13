@@ -75,7 +75,6 @@ def get_restaurant_info():
     else:
         # return jsonify({"message": "Please provide a restaurant in the query"})
         return check_current_location("momo")
-
     # tra error 404
 
 
