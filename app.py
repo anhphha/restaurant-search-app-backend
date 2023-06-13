@@ -35,24 +35,53 @@ def get_restaurant():
 
 @APP.route("/restaurants/search", methods=["GET"])
 def get_restaurant_info():
-    query = request.args.get("name", "")
+    query = request.args.get("q", "")
+    lat_param = request.args.get("lat")
+    lon_param = request.args.get("lon")
     if query:
         for restaurant in restaurants:
-            if query.lower() in restaurant["name"].lower():
-                return jsonify({
-                    "name": restaurants[0]["name"],
-                    "city": restaurants[0]["city"],
-                    "currency": restaurants[0]["currency"],
-                    "delivery_price": restaurants[0]["delivery_price"],
-                    "description": restaurants[0]["description"]
-                })
-        return jsonify({"message":"restaurant not found"})
+            if (query.lower() in restaurant["name"].lower()
+                or query.lower() in restaurant["description"].lower()
+                    or query.lower() in restaurant["tag"].lower()):
+                # scenario 1: if there is query (name, description, tag) but no lat, lon --> return return restaurant info
+                if lat_param is None and lon_param is None:
+                    return  jsonify({
+                        "name": restaurants[0]["name"],
+                        "city": restaurants[0]["city"],
+                        "currency": restaurants[0]["currency"],
+                        "delivery_price": restaurants[0]["delivery_price"],
+                        "description": restaurants[0]["description"],
+                        "tags": restaurants[0]["tags"]
+                    })
+
+                # scenario 2: if there is query, latitude, longitude, then return restaurant name + distance
+                elif lat_param is not None and lon_param is not None:
+                    distance = calculate_distance(
+                        float(lat_param), float(lon_param), restaurant["location"][1], restaurant["location"][0])
+
+                    restaurant_info = {
+                        "name": restaurants[0]["name"],
+                        "city": restaurants[0]["city"],
+                        "currency": restaurants[0]["currency"],
+                        "delivery_price": restaurants[0]["delivery_price"],
+                        "description": restaurants[0]["description"],
+                        "tags": restaurants[0]["tags"],
+                        "distance": distance if distance is not None else None,
+                    }
+
+                    return jsonify(restaurant_info)
+
+        return jsonify({"message": "restaurant not found"})
     else:
-        return jsonify({"message": "Please provide a restaurant in the query"})
+        # return jsonify({"message": "Please provide a restaurant in the query"})
+        return check_current_location("momo")
+
+    # tra error 404
 
 
-def check_current_location():
-    query = request.args.get("q", "")
+def check_current_location(query):
+    # query = request.args.get("q", "")
+    print(query)
     default_lat = 60.170456
     default_lon = 24.9383042
     current_lat = 0
@@ -62,13 +91,6 @@ def check_current_location():
     lat_param = request.args.get("lat")
     lon_param = request.args.get("long")
 
-    # Task 1:  check if there is name query.
-    # if yes, then return restaurant.
-    # no need to check current location or calculate distance
-
-    #Task 2: search name, description and tags for recommendation
-
-    # Checking current location
     # Better solution
     if lat_param is not None and lon_param is not None:
         try:
@@ -79,7 +101,6 @@ def check_current_location():
     else:
         current_lat = default_lat
         current_lon = default_lon
-
         # current_lat = float(request.args.get("lat", default_lat))
         # current_lon = float(request.args.get("lon", default_lon))
 
@@ -121,6 +142,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 
     distance = radius * c
+    print(distance)
     return distance
 
 
