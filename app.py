@@ -54,7 +54,7 @@ def get_restaurant_info():
                         "tags": restaurants[0]["tags"]
                     })
 
-                # scenario 2: if there is query, latitude, longitude, then return restaurant name + distance
+                # scenario 2: if there is query, latitude, longitude, then return restaurant info + distance
                 elif lat_param is not None and lon_param is not None:
                     distance = calculate_distance(
                         float(lat_param), float(lon_param), restaurant["location"][1], restaurant["location"][0])
@@ -70,6 +70,12 @@ def get_restaurant_info():
                     }
 
                     return jsonify(restaurant_info)
+                # scenario 3: if there is query, latitude, but no longitude, then return restaurant info only
+                elif lat_param is not None and lon_param is None:
+                    return jsonify(restaurant)
+                # scenario 4: if there is query, longitude, but no latitude, then return restaurant info only
+                elif lat_param is None and lon_param is not None:
+                    return jsonify(restaurant)
 
         return jsonify({"message": "restaurant not found"})
     else:
