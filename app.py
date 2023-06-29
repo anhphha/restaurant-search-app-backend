@@ -47,18 +47,20 @@ def get_restaurant_info():
                 or query.lower() in restaurant["description"].lower()
                     or query.lower() in [tag.lower() for tag in restaurant["tags"]]):
 
-                # scenario 1: if there is query (name, description, tag) but no lat, lon --> return return restaurant info
+                # scenario 1: if there is query (name, description, tag) but no lat, lon --> return restaurant (objects) which match the given query string and are closer than 3 kilometers from coordinates.
                 if lat_param is None and lon_param is None:
-                    matching_restaurants.append({
-                        "name": restaurant["name"],
-                        "city": restaurant["city"],
-                        "currency": restaurant["currency"],
-                        "delivery_price": restaurant["delivery_price"],
-                        "description": restaurant["description"],
-                        "tags": restaurant["tags"]
-                    })
-                    return jsonify(matching_restaurants)
-                    #return check_current_location("momo")
+                    return check_current_location(query)
+
+                    # matching_restaurants.append({
+                    #     "name": restaurant["name"],
+                    #     "city": restaurant["city"],
+                    #     "currency": restaurant["currency"],
+                    #     "delivery_price": restaurant["delivery_price"],
+                    #     "description": restaurant["description"],
+                    #     "tags": restaurant["tags"]
+                    # })
+                    # return jsonify(matching_restaurants) #---> this return only the restaurant info and ignore the distance
+
 
                 # scenario 2: if there is query, latitude, longitude, then return restaurant info + distance
                 elif lat_param is not None and lon_param is not None:
@@ -184,8 +186,16 @@ def check_current_location(query):
         distance = calculate_distance(
             current_lat, current_lon, restaurant["location"][1], restaurant["location"][0])
 
-        if distance <= 3 and query.lower() in restaurant["name"].lower():
-            results.append(restaurant)
+        if distance is not None and distance <= 3 and query.lower() in restaurant["name"].lower():
+            results.append({
+                "name": restaurant["name"],
+                "city": restaurant["city"],
+                "currency": restaurant["currency"],
+                "delivery_price": restaurant["delivery_price"],
+                "description": restaurant["description"],
+                "tags": restaurant["tags"],
+                "distance": distance if distance is not None else None,
+            })
 
         if len(results) > 0:
             return jsonify(results)
