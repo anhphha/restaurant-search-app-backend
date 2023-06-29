@@ -58,6 +58,7 @@ def get_restaurant_info():
                         "tags": restaurant["tags"]
                     })
                     return jsonify(matching_restaurants)
+                    #return check_current_location("momo")
 
                 # scenario 2: if there is query, latitude, longitude, then return restaurant info + distance
                 elif lat_param is not None and lon_param is not None:
@@ -111,7 +112,7 @@ def get_restaurant_info():
                 distance = calculate_distance(
                     float(lat_param), float(lon_param), restaurant["location"][1], restaurant["location"][0])
 
-                if distance is not None and distance <= 3.0: #Filter restaurants with distance <=3.0
+                if distance is not None and distance <= 3.0:  # Filter restaurants with distance <=3.0
                     nearby_restaurants.append({
                         "name": restaurant["name"],
                         "city": restaurant["city"],
@@ -126,10 +127,8 @@ def get_restaurant_info():
                 "current latitude": lat_param,
                 "current longitude": lon_param,
                 "nearby_restaurant": nearby_restaurants,
-                })
+            })
 
-            # return jsonify({"message": "Please provide a restaurant in the query"})
-            # return check_current_location("momo")
         # Scenario 6: no query, no lon but lat exist OR no query, no lat but lon exist--> return default lat, lon and ask for lat, lon
         elif (lat_param is None and lon_param is not None) or (lat_param is not None and lon_param is None):
             return jsonify({
@@ -137,14 +136,17 @@ def get_restaurant_info():
                 "lon": default_lon,
                 "message": "Please provide both latitude and longitude for accurate results"
             })
-
-    # tra error 404
-
+        # Scenario 7: no query, lat, lon exits —> return default location and ask for query
+        else:
+            return jsonify({
+                "lat": default_lat,
+                "lon": default_lon,
+                "message": "Please provide a query to get the restaurant recommendations"
+            })
 
 
 def check_current_location(query):
     # query = request.args.get("q", "")
-    print(query)
     default_lat = 60.170456
     default_lon = 24.9383042
     current_lat = 0
@@ -152,7 +154,7 @@ def check_current_location(query):
     results = []
 
     lat_param = request.args.get("lat")
-    lon_param = request.args.get("long")
+    lon_param = request.args.get("lon")
 
     # Better solution
     if lat_param is not None and lon_param is not None:
@@ -169,7 +171,7 @@ def check_current_location(query):
 
     # Simple Solution:
     # if lat_param is not None and lon_param is not None:
-    #     # if lattitude and longitude parameters are present, update the current values
+    #     # if latitude and longitude parameters are present, update the current values
     #     current_lat = float(lat_param)
     #     current_lon = float(long_param)
     # elif lat_param is None and lon_param is None:
@@ -185,13 +187,10 @@ def check_current_location(query):
         if distance <= 3 and query.lower() in restaurant["name"].lower():
             results.append(restaurant)
 
-    return jsonify({
-        "name": results[0]["name"],
-        "city": results[0]["city"],
-        "currency": results[0]["currency"],
-        "delivery_price": results[0]["delivery_price"],
-        "description": results[0]["description"]
-    })
+        if len(results) > 0:
+            return jsonify(results)
+        else:
+            return jsonify({"message": "No matching restaurant found"})
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
