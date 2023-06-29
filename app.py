@@ -38,6 +38,8 @@ def get_restaurant_info():
     query = request.args.get("q", "")
     lat_param = request.args.get("lat")
     lon_param = request.args.get("lon")
+    default_lat = 60.170456
+    default_lon = 24.9383042
     if query:
         matching_restaurants = []
         for restaurant in restaurants:
@@ -125,11 +127,19 @@ def get_restaurant_info():
                 "current longitude": lon_param,
                 "nearby_restaurant": nearby_restaurants,
                 })
-        # return jsonify({"message": "Please provide a restaurant in the query"})
-        # return check_current_location("momo")
+
+            # return jsonify({"message": "Please provide a restaurant in the query"})
+            # return check_current_location("momo")
+        # Scenario 6: no query, no lon but lat exist OR no query, no lat but lon exist--> return default lat, lon and ask for lat, lon
+        elif (lat_param is None and lon_param is not None) or (lat_param is not None and lon_param is None):
+            return jsonify({
+                "lat": default_lat,
+                "lon": default_lon,
+                "message": "Please provide both latitude and longitude for accurate results"
+            })
+
     # tra error 404
-    # build scenerio thu 5
-    # tra nhieu data points
+
 
 
 def check_current_location(query):
