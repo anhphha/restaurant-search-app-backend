@@ -39,48 +39,98 @@ def get_restaurant_info():
     lat_param = request.args.get("lat")
     lon_param = request.args.get("lon")
     if query:
+        matching_restaurants = []
         for restaurant in restaurants:
             if (query.lower() in restaurant["name"].lower()
                 or query.lower() in restaurant["description"].lower()
-                    or query.lower() in restaurant["tag"].lower()):
+                    or query.lower() in [tag.lower() for tag in restaurant["tags"]]):
+
                 # scenario 1: if there is query (name, description, tag) but no lat, lon --> return return restaurant info
                 if lat_param is None and lon_param is None:
-                    return  jsonify({
-                        "name": restaurants[0]["name"],
-                        "city": restaurants[0]["city"],
-                        "currency": restaurants[0]["currency"],
-                        "delivery_price": restaurants[0]["delivery_price"],
-                        "description": restaurants[0]["description"],
-                        "tags": restaurants[0]["tags"]
+                    matching_restaurants.append({
+                        "name": restaurant["name"],
+                        "city": restaurant["city"],
+                        "currency": restaurant["currency"],
+                        "delivery_price": restaurant["delivery_price"],
+                        "description": restaurant["description"],
+                        "tags": restaurant["tags"]
                     })
+                    return jsonify(matching_restaurants)
 
                 # scenario 2: if there is query, latitude, longitude, then return restaurant info + distance
                 elif lat_param is not None and lon_param is not None:
                     distance = calculate_distance(
                         float(lat_param), float(lon_param), restaurant["location"][1], restaurant["location"][0])
+                    # bring this outside
 
                     restaurant_info = {
-                        "name": restaurants[0]["name"],
-                        "city": restaurants[0]["city"],
-                        "currency": restaurants[0]["currency"],
-                        "delivery_price": restaurants[0]["delivery_price"],
-                        "description": restaurants[0]["description"],
-                        "tags": restaurants[0]["tags"],
+                        "name": restaurant["name"],
+                        "city": restaurant["city"],
+                        "currency": restaurant["currency"],
+                        "delivery_price": restaurant["delivery_price"],
+                        "description": restaurant["description"],
+                        "tags": restaurant["tags"],
                         "distance": distance if distance is not None else None,
                     }
 
-                    return jsonify(restaurant_info)
+                    matching_restaurants.append(restaurant_info)
+
+                    return jsonify(matching_restaurants)
+
                 # scenario 3: if there is query, latitude, but no longitude, then return restaurant info only
                 elif lat_param is not None and lon_param is None:
-                    return jsonify(restaurant)
+                    matching_restaurants.append({
+                        "name": restaurant["name"],
+                        "city": restaurant["city"],
+                        "currency": restaurant["currency"],
+                        "delivery_price": restaurant["delivery_price"],
+                        "description": restaurant["description"],
+                        "tags": restaurant["tags"]
+                    })
+                    return jsonify(matching_restaurants)
                 # scenario 4: if there is query, longitude, but no latitude, then return restaurant info only
                 elif lat_param is None and lon_param is not None:
-                    return jsonify(restaurant)
+                    matching_restaurants.append({
+                        "name": restaurant["name"],
+                        "city": restaurant["city"],
+                        "currency": restaurant["currency"],
+                        "delivery_price": restaurant["delivery_price"],
+                        "description": restaurant["description"],
+                        "tags": restaurant["tags"]
+                    })
+                    return jsonify(matching_restaurants)
+
         return jsonify({"message": "restaurant not found"})
     else:
+        # Scenerio 5: no query but lat, lon exist --> return location and restaurant recommendations within 3 km
+        if lat_param is not None and lon_param is not None:
+            nearby_restaurants = []
+
+            for restaurant in restaurants:
+                distance = calculate_distance(
+                    float(lat_param), float(lon_param), restaurant["location"][1], restaurant["location"][0])
+
+                if distance is not None and distance <= 3.0: #Filter restaurants with distance <=3.0
+                    nearby_restaurants.append({
+                        "name": restaurant["name"],
+                        "city": restaurant["city"],
+                        "currency": restaurant["currency"],
+                        "delivery_price": restaurant["delivery_price"],
+                        "description": restaurant["description"],
+                        "tags": restaurant["tags"],
+                        "distance": distance if distance is not None else None,
+                    })
+
+            return jsonify({
+                "current latitude": lat_param,
+                "current longitude": lon_param,
+                "nearby_restaurant": nearby_restaurants,
+                })
         # return jsonify({"message": "Please provide a restaurant in the query"})
-        return check_current_location("momo")
+        # return check_current_location("momo")
     # tra error 404
+    # build scenerio thu 5
+    # tra nhieu data points
 
 
 def check_current_location(query):
