@@ -1,13 +1,14 @@
 # Restaurant Search App Backend
 
-This is a assignment for WOLT Programme
-Created and made by Anh Ha
+### This is a assignment for WOLT Programme.
+
+### Created and made by Anh Ha
 
 ## Overview
 A list of restaurants is an important element in Wolt app. Depending on where our customers are located, they will be able to order food from few dozen or even from hundreds of different restaurants. Views in the app (Discovery, Search, Delivers, Nearby) sort restaurants based on the delivery time, popularity, rating and various other factors when trying to find the most relevant matches for each customer.
 
 ## Restaurant data
-restaurant.json contains fifty restaurants from central Helsinki area. Each object has a set fields providing more information about the restaurant, like name, image and location.
+```restaurant.json``` contains fifty restaurants from central Helsinki area. Each object has a set fields providing more information about the restaurant, like name, image and location.
 
 Example:
 ```
