@@ -164,3 +164,6 @@ def test_get_restaurant_info_without_query():
         "lon": 24.9383042,
         "message": "Please provide a query to get the restaurant recommendations"
     }
+
+if __name__ == "__main__":
+    pytest.main()

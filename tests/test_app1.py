@@ -17,8 +17,6 @@ def test_helloworld():
     assert response.json == {"data": "Hello World"}
 
 
-# @app.route("/restaurants/search", methods=["GET"])
-
 
 
 
