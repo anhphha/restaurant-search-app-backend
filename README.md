@@ -6,7 +6,10 @@
 
 ```
 python -m venv venv
+virtualenv flask
 source venv/bin/activate
+pip install pytest
+pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 ## Running the Application
