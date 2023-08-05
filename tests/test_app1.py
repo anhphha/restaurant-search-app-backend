@@ -5,6 +5,14 @@ from flask.testing import FlaskClient
 app = Flask(__name__)
 client = app.test_client()
 
+# how to separate tests and server test
+# add more test if possible
+# them/thay doi error 400 cho without query
+# error 404: search nha hang ko co thi tra 404
+# error 400: without query --> bad request
+
+
+
 @app.route('/')
 def helloworld():
     if (request.method == 'GET'):

@@ -107,7 +107,7 @@ def get_restaurant_info():
                     matching_restaurants.append(restaurant_info)
                     return jsonify(matching_restaurants)
 
-        return jsonify({"message": "restaurant not found"})
+        return jsonify({"error": "restaurant not found"}),404
     else:
         # Scenario 5: no query but lat, lon exist --> return location and restaurant recommendations within 3 km
         if lat_param is not None and lon_param is not None:
@@ -134,20 +134,20 @@ def get_restaurant_info():
                 "nearby_restaurant": nearby_restaurants,
             })
 
-        # Scenario 6: no query, no lon but lat exist OR no query, no lat but lon exist--> return default lat, lon and ask for lat, lon
+        # Scenario 6: no query, no lon but lat exist OR no query, no lat but lon exist--> return default lat, lon and ask for lat, lon, error 400 Bad Request
         elif (lat_param is None and lon_param is not None) or (lat_param is not None and lon_param is None):
             return jsonify({
                 "lat": default_lat,
                 "lon": default_lon,
-                "message": "Please provide both latitude and longitude for accurate results"
-            })
-        # Scenario 7: no query, lat, lon exits —> return default location and ask for query
+                "error": "Please provide both latitude and longitude for accurate results"
+            }), 400
+        # Scenario 7: no query, no lat, lon exits —> return default location and ask for query, error 400 Bad Request
         else:
             return jsonify({
                 "lat": default_lat,
                 "lon": default_lon,
-                "message": "Please provide a query to get the restaurant recommendations"
-            })
+                "error": "Please provide a query to get the restaurant recommendations"
+            }), 400
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
