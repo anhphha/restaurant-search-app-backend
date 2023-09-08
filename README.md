@@ -105,28 +105,32 @@ pip install -r requirements.txt
 ```
 ## Running the Application
 
-```
+```Python
 FLASK_APP=app.py flask run
 ```
 
 ## Execution all the Tests
 
 To execute all the tests, run the following command:
-```
+```Python
 pytest
+```
+OR
+```Python
+python -m pytest
 ```
 
 ## Execution all the Tests with stdout response
 
 To execute all the tests, run the following command:
-```
+```Python
 pytest -s
 ```
 
 ## Executing only grouped Tests
 
 To only execute the get_request grouped tests, run the following command:
-```
+```Python
 pytest -m get_request
 ```
 # Details
