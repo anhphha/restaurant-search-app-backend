@@ -83,6 +83,9 @@ Bonus task is completely optional and it doesn't affect how we review assignment
 python3 -m venv venv
 ```
 ```Python
+pip install python-dotenv
+```
+```Python
 virtualenv flask
 ```
 ```Python
@@ -103,7 +106,7 @@ pip install -r requirements.txt
 ## Running the Application
 
 ```
-FLASK_APP=app.py flask run`
+FLASK_APP=app.py flask run
 ```
 
 ## Execution all the Tests

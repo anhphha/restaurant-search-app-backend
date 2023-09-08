@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import math
 import re
 
-APP = Flask(__name__)
+app = Flask(__name__)
 
 # Sample restaurant data
 restaurants = [
@@ -33,19 +33,19 @@ restaurants = [
 ]
 
 
-@APP.route('/', methods=['GET'])
+@app.route('/', methods=['GET'])
 def helloworld():
     if (request.method == 'GET'):
         data = {"data": "Hello World"}
         return jsonify(data)
 
 
-@APP.route("/restaurants", methods=["GET"])
+@app.route("/restaurants", methods=["GET"])
 def get_restaurant():
     return jsonify(restaurants)
 
 
-@APP.route("/restaurants/search", methods=["GET"])
+@app.route("/restaurants/search", methods=["GET"])
 def get_restaurant_info():
     query = request.args.get("q", "")
     lat_param = request.args.get("lat")
