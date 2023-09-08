@@ -1,6 +1,6 @@
 # Restaurant Search App Backend
 
-#### This is a assignment for WOLT Programme.
+#### This is a assignment for WOLT.
 
 #### Created and made by Anh Ha
 
@@ -79,19 +79,31 @@ Bonus task is completely optional and it doesn't affect how we review assignment
 
 # TESTING FLASK FRAMEWORK WITH PYTEST
 ## Installation
-
+```Python
+python3 -m venv venv
 ```
-python -m venv venv
+```Python
 virtualenv flask
+```
+```Python
 source venv/bin/activate
+```
+```Python
+pip install flask
+```
+```Python
 pip install pytest
+```
+```Python
 pip freeze > requirements.txt
+```
+```Python
 pip install -r requirements.txt
 ```
 ## Running the Application
 
 ```
-FLASK_APP=api.py flask run`
+FLASK_APP=app.py flask run`
 ```
 
 ## Execution all the Tests
