@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask.testing import FlaskClient
 
+
 # Create a test client
 app = Flask(__name__)
 client = app.test_client()
+
 
 restaurants = [
     {
@@ -28,3 +30,6 @@ def test_get_restaurant():
     response = client.get('/restaurants')
     assert response.status_code == 200
     assert response.json == restaurants
+
+if __name__ == "__main__":
+    pytest.main()
