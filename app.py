@@ -74,8 +74,7 @@ def get_restaurant_info():
                 # scenario 1: if there is query (name, description, tag) but no lat, lon --> return restaurant (objects) which match the given query string and are closer than 3 kilometers from coordinates.
                 if lat_param is None and lon_param is None:
                     # return check_current_location(query)
-                    matching_restaurants.append(restaurant_info)
-                    # ---> this return only the restaurant info and ignore the distance
+                    matching_restaurants.append(restaurant_info) # ---> this return only the restaurant info and ignore the distance
                     return jsonify(matching_restaurants)
 
                 # scenario 2: if there is query, latitude, longitude, then return restaurant info + distance

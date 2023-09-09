@@ -25,7 +25,7 @@ restaurants = [
         "location": [24.9677737, 60.2029952],
         "name": "Kuwano",
         "online": False,
-        "tags": ["chinese", "buffeti"],
+        "tags": ["chinese", "buffet"],
         "blurhash": "j2DUFG8jbu8AXuLIT5Tt0B01R2;"
     }
 ]
