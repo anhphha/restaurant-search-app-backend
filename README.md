@@ -160,7 +160,7 @@ pytest -m get_request
 # SETUP CI/CD AND DEPLOYMENT AUTOMATION
 
 | --------------------------------------------------------- |
-| <img src="images/Kubernetes_Pipeline.png"  width="500"/> |
+| <img src="images/Kubernetes_Pipeline.png"  width="800"/> |
 
 - [x] Set up a cluster
 - [x] Package your application into containers
@@ -271,12 +271,13 @@ kubectl get pods -n harness-delegate-ng
 ### Results
 
 | -------------------------------------------------- |
-| <img src="images/CI_CD.png"  width="1000"/>        |
-| <img src="images/Push_Trigger.png"  width="1000"/> |
+| <img src="images/CI_CD.png"  width="800"/> |
+| <img src="images/Push_Trigger.png"  width="800"/> |
 
 # Details
 
 This repo is built following a tutorial published on CircleCI blog under the CircleCI Guest Writer Program.
 Blog post:
+
 - [Testing Flask Framework with Pytest](https://circleci.com/blog/testing-flask-framework-with-pytest/)
 - [Kubernetes Guidelines ](https://dev.to/pavanbelagatti/deploying-an-application-on-kubernetes-a-complete-guide-1cj6)
