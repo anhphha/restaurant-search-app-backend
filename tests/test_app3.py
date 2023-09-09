@@ -26,7 +26,7 @@ restaurants = [
         "name": "Kuwano",
         "online": False,
         "tags": ["chinese", "buffeti"],
-        "blurhash": "j2DUFG8jbu8AXuLIT5Tt0B01R2;;"
+        "blurhash": "j2DUFG8jbu8AXuLIT5Tt0B01R2;"
     }
 ]
 
