@@ -159,8 +159,7 @@ pytest -m get_request
 
 # SETUP CI/CD AND DEPLOYMENT AUTOMATION
 
-| --------------------------------------------------------- |
-| <img src="images/Kubernetes_Pipeline.png"  width="800"/> |
+<img src="images/Kubernetes_Pipeline.png"  width="700"/>
 
 - [x] Set up a cluster
 - [x] Package your application into containers
@@ -270,8 +269,8 @@ kubectl get pods -n harness-delegate-ng
 
 ### Results
 
-| -------------------------------------------------- |
 | <img src="images/CI_CD.png"  width="800"/> |
+| -------------------------------------------------- |
 | <img src="images/Push_Trigger.png"  width="800"/> |
 
 # Details
