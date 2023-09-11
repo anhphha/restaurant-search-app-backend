@@ -159,6 +159,12 @@ pytest -m get_request
 
 # SETUP CI/CD AND DEPLOYMENT AUTOMATION
 
+## Automate Deployment via Harness IO
+
+Harness CI is a self-service CI solution that is container-native so all builds are isolated, and all extensions are standardized.
+
+Harness is a continuous integration and continuous delivery (CI/CD) platform for cloud and on-premise projects. It enables DevOps engineers to automate code testing, deployment, and rollbacks.
+
 <img src="images/Kubernetes_Pipeline.png"  width="700"/>
 
 - [x] Set up a cluster
@@ -275,55 +281,55 @@ kubectl get pods -n harness-delegate-ng
 
 # Automate Deployment via Amazon EKS (Elastic Kubenetes Service)
 
-1. Create a namespace
+- Step 1: Create a namespace
 
 ```
 kubectl create namespace eks-search-app
 ```
 
-2. Create a Kubernetes deployment
-   - Create `eks-search-app-deployment.yaml`. This search app deployment pulls a container image from a public repository and deploys three replicas (individual Pods) of it to your cluster.
-   - Apply the deployment manifest to the application cluster.
-   ```
-   kubectl apply -f eks-search-app-deployment.yaml
-   ```
-3. Create a service. A service allows you to access all replicas through a single IP address or name
-   - Create eks-search-app-service.yaml
-   - Apply the service manifest to your cluster.
-   ```
-   kubectl apply -f eks-search-app-service.yaml
-   ```
-4. View all resources that exist in the `eks-search-app namespace`
+- Step 2: Create a Kubernetes deployment
+  - Create `eks-search-app-deployment.yaml`. This search app deployment pulls a container image from a public repository and deploys three replicas (individual Pods) of it to your cluster.
+  - Apply the deployment manifest to the application cluster.
+  ```
+  kubectl apply -f eks-search-app-deployment.yaml
+  ```
+- Step 3: Create a service. A service allows you to access all replicas through a single IP address or name
+  - Create eks-search-app-service.yaml
+  - Apply the service manifest to your cluster.
+  ```
+  kubectl apply -f eks-search-app-service.yaml
+  ```
+- Step 4: View all resources that exist in the `eks-search-app namespace`
 
 ```
 kubectl get all -n eks-search-app
 ```
 
-5. View the details of the deployed service
+- Step 5: View the details of the deployed service
 
 ```
 kubectl -n eks-search-app describe service eks-search-app-linux-service
 ```
 
-6. View the details of one of the Pods listed in the output when you viewed the namespace in a previous step
+- Step 6: View the details of one of the Pods listed in the output when you viewed the namespace in a previous step
 
 ```
 kubectl -n eks-search-app describe pod eks-search-app-linux-deployment-55d4997bf
 ```
 
-7. Run a shell on the Pod that you described in the previous step
+- Step 7: Run a shell on the Pod that you described in the previous step
 
 ```
 kubectl exec -it eks-search-app-linux-deployment-55d4997bf-6z78l -n eks-search-app -- /bin/bash
 ```
 
-8. From the Pod shell, view the output from the web server that was installed with your deployment in a previous step. You only need to specify the service name. It is resolved to the service's IP address by CoreDNS, which is deployed with an Amazon EKS cluster, by default.
+- Step 8: From the Pod shell, view the output from the web server that was installed with your deployment in a previous step. You only need to specify the service name. It is resolved to the service's IP address by CoreDNS, which is deployed with an Amazon EKS cluster, by default.
 
 ```
 curl eks-search-app-linux-service
 ```
 
-9. From the Pod shell, view the DNS server for the Pod.
+- Step 9: From the Pod shell, view the DNS server for the Pod.
 
 ```
 cat /etc/resolv.conf
@@ -337,8 +343,8 @@ search eks-search-app.svc.cluster.local svc.cluster.local cluster.local
 options ndots:5
 ```
 
-10. Disconnect from the Pod by typing `exit`.
-11. Once you're finished with the sample application, you can remove the sample namespace, service, and deployment with the following command.
+- Step 10: Disconnect from the Pod by typing `exit`.
+- Step 11: Once you're finished with the sample application, you can remove the sample namespace, service, and deployment with the following command.
 
 ```
 kubectl delete namespace eks-search-app
@@ -350,4 +356,6 @@ This repo is built following a tutorial published on CircleCI blog under the Cir
 Blog post:
 
 - [Testing Flask Framework with Pytest](https://circleci.com/blog/testing-flask-framework-with-pytest/)
-- [Kubernetes Guidelines ](https://dev.to/pavanbelagatti/deploying-an-application-on-kubernetes-a-complete-guide-1cj6)
+- [Kubernetes Guidelines via Harness](https://dev.to/pavanbelagatti/deploying-an-application-on-kubernetes-a-complete-guide-1cj6)
+
+- [Kubernetes Guidelines via Amazon EKS](https://docs.aws.amazon.com/eks/latest/userguide/sample-deployment.html)
